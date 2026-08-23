@@ -95,7 +95,7 @@ supply a Claude API key.
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/<your-username>/document-summary-assistant.git
+git clone https://github.com/Ayush-choudhary2005/document-summary-assistant.git
 cd document-summary-assistant
 
 # Backend
@@ -170,7 +170,7 @@ Example response from `/api/documents/summarize`:
 
 ---
 
-## ☁️ Deployment
+## Deployment
 
 **Backend → Render / Railway / Fly.io**
 
@@ -214,7 +214,7 @@ not just a demo.
 
 ---
 
-## 🧪 Limitations & possible next steps
+## Limitations & possible next steps
 
 - OCR accuracy depends on scan quality; very low-confidence results are
   flagged in the UI but not auto-corrected.
@@ -223,6 +223,3 @@ not just a demo.
 - No persistent server-side storage/auth by design (stateless, privacy
   friendly); a "shareable link" feature would need a database.
 
-## License
-
-MIT — see [LICENSE](./LICENSE).
