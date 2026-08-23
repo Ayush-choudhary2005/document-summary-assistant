@@ -78,6 +78,7 @@ export default function App() {
     setResult({
       fileName: entry.fileName,
       summary: entry.summary,
+      summaryPoints: entry.summaryPoints,
       summaryLength: entry.summaryLength,
       summaryMode: entry.summaryMode,
       keywords: entry.keywords,

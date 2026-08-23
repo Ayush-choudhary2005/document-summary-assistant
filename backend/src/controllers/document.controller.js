@@ -48,7 +48,7 @@ async function summarizeDocument(req, res) {
       summaryResult = await summarizeWithAI(extraction.text, length);
     } else {
       const result = summarizeWithAnnotations(extraction.text, length);
-      summaryResult = { summary: result.summary, mode: 'extractive' };
+      summaryResult = { summary: result.summary, summaryPoints: result.summaryPoints, mode: 'extractive' };
       annotatedSentences = result.annotatedSentences;
     }
 
@@ -64,6 +64,7 @@ async function summarizeDocument(req, res) {
         ocrConfidence: extraction.confidence ?? null,
         originalText: extraction.text,
         summary: summaryResult.summary,
+        summaryPoints: summaryResult.summaryPoints || [],
         summaryMode: summaryResult.mode,
         summaryLength: length,
         annotatedSentences,
@@ -102,6 +103,7 @@ async function summarizeBatch(req, res) {
           fileName: file.originalname,
           success: true,
           summary: result.summary,
+          summaryPoints: result.summaryPoints,
           keywords,
           stats,
         };

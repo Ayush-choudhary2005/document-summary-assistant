@@ -1,19 +1,18 @@
-# Document Summary Assistant
+# 📄 Document Summary Assistant
 
 Upload a PDF or a photo of a scanned page, and get back a clean, smart
 summary — with the exact sentences it picked highlighted right on the
 original text, so the summarization is never a black box.
 
-Built for the _Technical Assessment Project — Software Engineer Position_
+Built for the *Technical Assessment Project — Software Engineer Position*
 brief (Document Upload → Text Extraction → Summary Generation → UI/UX →
 Hosting), plus a handful of extra features layered on top.
 
 ---
 
-## Features
+## ✨ Features
 
 ### From the brief
-
 - **Document upload** — drag-and-drop or file picker, PDF + image formats.
 - **PDF parsing** — extracts text while preserving paragraph structure.
 - **OCR for images** — scanned pages / photos are read with Tesseract OCR.
@@ -25,23 +24,22 @@ Hosting), plus a handful of extra features layered on top.
   validation, loading states, `.env`-driven config.
 
 ### Extra features (not in the brief)
-
-| Feature                      | What it does                                                                                                                                                                        |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Annotated original view**  | Shows the source text with the exact sentences chosen for the summary highlighted, like a real highlighter mark — makes the extraction transparent.                                 |
-| **AI Enhanced Mode**         | Optional toggle that swaps the local extractive summarizer for an abstractive, freshly-worded summary from the Claude API (only appears if the server owner configures an API key). |
-| **Keyword / tag extraction** | Auto-pulls the most important terms from the document into a tag cloud.                                                                                                             |
-| **Document stats**           | Word counts, reading time, and compression ratio for original vs. summary.                                                                                                          |
-| **Export summary**           | Download the summary as `.txt`, `.md`, or `.pdf`.                                                                                                                                   |
-| **Copy to clipboard**        | One click to copy the summary.                                                                                                                                                      |
-| **Local history**            | Your last 20 summaries are saved in the browser (`localStorage`) — nothing server-side, nothing sent anywhere.                                                                      |
-| **Batch upload**             | Drop in multiple files at once and get a summary for each.                                                                                                                          |
-| **Dark mode**                | Persisted theme toggle, respects `prefers-color-scheme` on first visit.                                                                                                             |
-| **Accessibility floor**      | Visible keyboard focus states, `prefers-reduced-motion` respected, semantic roles on dynamic regions.                                                                               |
+| Feature | What it does |
+|---|---|
+| 🖍️ **Annotated original view** | Shows the source text with the exact sentences chosen for the summary highlighted, like a real highlighter mark — makes the extraction transparent. |
+| 🤖 **AI Enhanced Mode** | Optional toggle that swaps the local extractive summarizer for an abstractive, freshly-worded summary from the Claude API (only appears if the server owner configures an API key). |
+| 🏷️ **Keyword / tag extraction** | Auto-pulls the most important terms from the document into a tag cloud. |
+| 📊 **Document stats** | Word counts, reading time, and compression ratio for original vs. summary. |
+| 📥 **Export summary** | Download the summary as `.txt`, `.md`, or `.pdf`. |
+| 📋 **Copy to clipboard** | One click to copy the summary. |
+| 🕘 **Local history** | Your last 20 summaries are saved in the browser (`localStorage`) — nothing server-side, nothing sent anywhere. |
+| 📚 **Batch upload** | Drop in multiple files at once and get a summary for each. |
+| 🌗 **Dark mode** | Persisted theme toggle, respects `prefers-color-scheme` on first visit. |
+| ♿ **Accessibility floor** | Visible keyboard focus states, `prefers-reduced-motion` respected, semantic roles on dynamic regions. |
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 document-summary-assistant/
@@ -74,7 +72,6 @@ goes back to the client, which renders the summary, the annotated original,
 the tag cloud, and the stats panel.
 
 ### Why extractive summarization by default?
-
 The default summarizer needs **no API key and no internet call** — it
 tokenizes sentences, scores them by weighted word frequency (with small
 bonuses for opening/closing sentences), and keeps the top-scoring ones in
@@ -85,17 +82,15 @@ supply a Claude API key.
 
 ---
 
-## Getting started
+## 🚀 Getting started
 
 ### Prerequisites
-
 - Node.js **18+**
 - npm 9+
 
 ### 1. Clone & install
-
 ```bash
-git clone https://github.com/Ayush-choudhary2005/document-summary-assistant.git
+git clone https://github.com/<your-username>/document-summary-assistant.git
 cd document-summary-assistant
 
 # Backend
@@ -110,7 +105,6 @@ cp .env.example .env
 ```
 
 ### 2. Run in development
-
 ```bash
 # Terminal 1 — backend (http://localhost:5000)
 cd backend
@@ -120,34 +114,29 @@ npm run dev
 cd frontend
 npm run dev
 ```
-
 Open `http://localhost:5173` and drop in a document.
 
 ### 3. (Optional) Enable AI Enhanced Mode
-
 Add your Anthropic API key to `backend/.env`:
-
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_MODEL=claude-sonnet-5
 ```
-
 Restart the backend — the "AI Enhanced Mode" checkbox in the UI will
 automatically unlock.
 
 ---
 
-## API reference
+## 🔌 API reference
 
-| Method | Endpoint                         | Body                                                                                                                 | Description                                                             |
-| ------ | -------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| GET    | `/api/health`                    | —                                                                                                                    | Health check                                                            |
-| GET    | `/api/documents/capabilities`    | —                                                                                                                    | Reports max upload size, supported types, whether AI mode is configured |
-| POST   | `/api/documents/summarize`       | `multipart/form-data`: `document` (file), `length` (`short`\|`medium`\|`long`), `mode` (`extractive`\|`ai-enhanced`) | Summarizes a single document                                            |
-| POST   | `/api/documents/summarize-batch` | `multipart/form-data`: `documents` (up to 10 files), `length`                                                        | Summarizes multiple documents in one call                               |
+| Method | Endpoint | Body | Description |
+|---|---|---|---|
+| GET | `/api/health` | — | Health check |
+| GET | `/api/documents/capabilities` | — | Reports max upload size, supported types, whether AI mode is configured |
+| POST | `/api/documents/summarize` | `multipart/form-data`: `document` (file), `length` (`short`\|`medium`\|`long`), `mode` (`extractive`\|`ai-enhanced`) | Summarizes a single document |
+| POST | `/api/documents/summarize-batch` | `multipart/form-data`: `documents` (up to 10 files), `length` | Summarizes multiple documents in one call |
 
 Example response from `/api/documents/summarize`:
-
 ```json
 {
   "success": true,
@@ -159,28 +148,22 @@ Example response from `/api/documents/summarize`:
     "summaryLength": "medium",
     "annotatedSentences": [{ "text": "…", "highlighted": true }],
     "keywords": [{ "text": "revenue", "count": 7 }],
-    "stats": {
-      "originalWordCount": 1204,
-      "summaryWordCount": 210,
-      "compressionPercent": 83
-    }
+    "stats": { "originalWordCount": 1204, "summaryWordCount": 210, "compressionPercent": 83 }
   }
 }
 ```
 
 ---
 
-## Deployment
+## ☁️ Deployment
 
 **Backend → Render / Railway / Fly.io**
-
 1. Push this repo to GitHub.
 2. Create a new Web Service, root directory `backend`.
 3. Build command: `npm install` · Start command: `npm start`.
 4. Set the environment variables from `backend/.env.example`.
 
 **Frontend → Vercel / Netlify**
-
 1. New project, root directory `frontend`.
 2. Build command: `npm run build` · Output directory: `dist`.
 3. Set `VITE_API_BASE_URL` to your deployed backend URL (e.g.
@@ -191,7 +174,7 @@ deployed frontend URL once both are live.
 
 ---
 
-## Approach write-up (≤200 words)
+## 📝 Approach write-up (≤200 words)
 
 I split the app into a stateless Express API and a Vite/React frontend so
 each half can be deployed and scaled independently. Text extraction is
@@ -214,8 +197,7 @@ not just a demo.
 
 ---
 
-## Limitations & possible next steps
-
+## 🧪 Limitations & possible next steps
 - OCR accuracy depends on scan quality; very low-confidence results are
   flagged in the UI but not auto-corrected.
 - Extractive summaries occasionally skip connective phrasing since
@@ -223,3 +205,5 @@ not just a demo.
 - No persistent server-side storage/auth by design (stateless, privacy
   friendly); a "shareable link" feature would need a database.
 
+## License
+MIT — see [LICENSE](./LICENSE).

@@ -14,7 +14,16 @@ export default function BatchResults({ results }) {
           <h3 className="font-display text-lg text-ink dark:text-paper truncate">{r.fileName}</h3>
           {r.success ? (
             <>
-              <p className="mt-2 text-sm text-ink/80 dark:text-paper/80">{r.summary}</p>
+              <ul className="mt-2 space-y-1.5">
+                {(r.summaryPoints && r.summaryPoints.length > 0 ? r.summaryPoints : [r.summary]).map(
+                  (point, pi) => (
+                    <li key={pi} className="flex gap-2 text-sm text-ink/80 dark:text-paper/80">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-moss dark:bg-marker" aria-hidden="true" />
+                      <span>{point}</span>
+                    </li>
+                  )
+                )}
+              </ul>
               {r.keywords?.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {r.keywords.map((kw) => (

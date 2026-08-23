@@ -10,8 +10,11 @@ export default function SummaryResult({ result }) {
 
   if (!result) return null;
 
+  const points =
+    result.summaryPoints && result.summaryPoints.length > 0 ? result.summaryPoints : [result.summary];
+
   const handleCopy = async () => {
-    await copyToClipboard(result.summary);
+    await copyToClipboard(points);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -35,9 +38,14 @@ export default function SummaryResult({ result }) {
         )}
       </div>
 
-      <p className="mt-5 font-display text-lg leading-relaxed text-ink dark:text-paper whitespace-pre-line">
-        {result.summary}
-      </p>
+      <ul className="mt-5 space-y-3">
+        {points.map((point, i) => (
+          <li key={i} className="flex gap-3 font-display text-lg leading-relaxed text-ink dark:text-paper">
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-moss dark:bg-marker" aria-hidden="true" />
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
 
       <div className="mt-5 flex flex-wrap gap-2">
         <button
@@ -49,23 +57,21 @@ export default function SummaryResult({ result }) {
         </button>
         <button
           type="button"
-          onClick={() => exportAsTxt(result.fileName, result.summary)}
+          onClick={() => exportAsTxt(result.fileName, points)}
           className="rounded-md border border-ink/20 dark:border-paper/20 px-3 py-1.5 text-xs font-mono uppercase tracking-wide hover:border-moss dark:hover:border-marker transition-colors"
         >
           Export .txt
         </button>
         <button
           type="button"
-          onClick={() =>
-            exportAsMarkdown(result.fileName, result.summary, result.keywords?.map((k) => k.text))
-          }
+          onClick={() => exportAsMarkdown(result.fileName, points, result.keywords?.map((k) => k.text))}
           className="rounded-md border border-ink/20 dark:border-paper/20 px-3 py-1.5 text-xs font-mono uppercase tracking-wide hover:border-moss dark:hover:border-marker transition-colors"
         >
           Export .md
         </button>
         <button
           type="button"
-          onClick={() => exportAsPdf(result.fileName, result.summary)}
+          onClick={() => exportAsPdf(result.fileName, points)}
           className="rounded-md border border-ink/20 dark:border-paper/20 px-3 py-1.5 text-xs font-mono uppercase tracking-wide hover:border-moss dark:hover:border-marker transition-colors"
         >
           Export .pdf

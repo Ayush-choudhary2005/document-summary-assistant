@@ -27,7 +27,6 @@ export async function summarizeDocument({ file, length, mode, onUploadProgress }
 
   try {
     const { data } = await client.post('/documents/summarize', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress: (evt) => {
         if (onUploadProgress && evt.total) {
           onUploadProgress(Math.round((evt.loaded / evt.total) * 100));
@@ -46,9 +45,7 @@ export async function summarizeBatch({ files, length }) {
   formData.append('length', length);
 
   try {
-    const { data } = await client.post('/documents/summarize-batch', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const { data } = await client.post('/documents/summarize-batch', formData);
     return data.data;
   } catch (error) {
     throw unwrapError(error);

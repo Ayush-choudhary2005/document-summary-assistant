@@ -24,6 +24,7 @@ export function useHistory() {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       fileName: result.fileName,
       summary: result.summary,
+      summaryPoints: result.summaryPoints || [],
       summaryLength: result.summaryLength,
       summaryMode: result.summaryMode,
       keywords: result.keywords?.slice(0, 5) || [],

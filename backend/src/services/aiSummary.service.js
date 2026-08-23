@@ -6,10 +6,10 @@ if (config.anthropic.enabled) {
   client = new Anthropic({ apiKey: config.anthropic.apiKey });
 }
 
-const LENGTH_INSTRUCTIONS = {
-  short: 'in 2-3 concise sentences',
-  medium: 'in one tight paragraph (5-7 sentences)',
-  long: 'in 2-3 well-organized paragraphs covering all major points',
+const POINT_COUNT_INSTRUCTIONS = {
+  short: '3-4 bullet points',
+  medium: '5-7 bullet points',
+  long: '8-12 bullet points, grouping related ideas together',
 };
 
 /**
@@ -28,7 +28,7 @@ async function summarizeWithAI(text, length = 'medium') {
     throw err;
   }
 
-  const instruction = LENGTH_INSTRUCTIONS[length] || LENGTH_INSTRUCTIONS.medium;
+  const pointInstruction = POINT_COUNT_INSTRUCTIONS[length] || POINT_COUNT_INSTRUCTIONS.medium;
 
   // Guard against sending an enormous document straight through.
   const trimmedText = text.length > 60000 ? `${text.slice(0, 60000)}\n[...truncated]` : text;
@@ -40,20 +40,30 @@ async function summarizeWithAI(text, length = 'medium') {
       {
         role: 'user',
         content:
-          `Summarize the following document ${instruction}. ` +
-          'Capture the main ideas and key points. Respond with only the summary text, no preamble.\n\n' +
+          `Summarize the following document as ${pointInstruction}. ` +
+          'Each point must be on its own line, starting with "- ", written as a complete, ' +
+          'standalone sentence covering one distinct idea (never merge two ideas into one bullet, ' +
+          'and never split one idea across two bullets). ' +
+          'Respond with only the bullet points, no heading, no preamble, no closing remarks.\n\n' +
           `---DOCUMENT---\n${trimmedText}`,
       },
     ],
   });
 
-  const summary = response.content
+  const rawText = response.content
     .filter((block) => block.type === 'text')
     .map((block) => block.text)
     .join('\n')
     .trim();
 
-  return { summary, mode: 'ai-enhanced', model: config.anthropic.model };
+  const summaryPoints = rawText
+    .split('\n')
+    .map((line) => line.replace(/^[\s•*-]+/, '').trim())
+    .filter(Boolean);
+
+  const summary = summaryPoints.join('\n\n');
+
+  return { summary, summaryPoints, mode: 'ai-enhanced', model: config.anthropic.model };
 }
 
 module.exports = { summarizeWithAI, isAvailable: () => Boolean(client) };

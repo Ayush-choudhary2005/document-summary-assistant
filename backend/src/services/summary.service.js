@@ -85,21 +85,53 @@ function scoreSentences(sentences) {
 }
 
 /**
+ * Groups selected sentences into "points": consecutive sentences from the
+ * source text (index N followed by index N+1) are treated as one continuous
+ * idea and merged into a single bullet, while a jump between non-adjacent
+ * sentences signals a new idea and starts a new bullet. This is what turns
+ * the summary into readable, distinct points instead of one flat paragraph.
+ */
+function groupIntoPoints(orderedItems) {
+  if (orderedItems.length === 0) return [];
+
+  const groups = [[orderedItems[0]]];
+
+  for (let i = 1; i < orderedItems.length; i += 1) {
+    const prev = orderedItems[i - 1];
+    const current = orderedItems[i];
+    const lastGroup = groups[groups.length - 1];
+
+    if (current.index === prev.index + 1) {
+      lastGroup.push(current);
+    } else {
+      groups.push([current]);
+    }
+  }
+
+  return groups.map((group) => group.map((item) => item.sentence).join(' ').trim());
+}
+
+/**
  * Generates an extractive summary: picks the highest-scoring sentences,
- * then re-orders them back into their original sequence so the summary
- * still reads coherently top to bottom.
+ * groups adjacent ones into coherent points, then returns those points in
+ * their original order so the summary reads coherently top to bottom.
+ *
+ * Returns both `summaryPoints` (an array — one entry per distinct idea, for
+ * bullet-point rendering) and a flattened `summary` string (double-newline
+ * separated, for plain-text contexts like exports).
  */
 function summarizeExtractive(text, length = 'medium') {
   const ratio = LENGTH_RATIOS[length] ?? LENGTH_RATIOS.medium;
   const sentences = splitIntoSentences(text);
 
   if (sentences.length === 0) {
-    return { summary: '', selectedSentenceIndices: [] };
+    return { summary: '', summaryPoints: [], selectedSentenceIndices: [] };
   }
 
   if (sentences.length <= MIN_SENTENCES[length]) {
     return {
       summary: sentences.join(' '),
+      summaryPoints: sentences,
       selectedSentenceIndices: sentences.map((_, i) => i),
     };
   }
@@ -112,9 +144,11 @@ function summarizeExtractive(text, length = 'medium') {
   const scored = scoreSentences(sentences);
   const topSentences = [...scored].sort((a, b) => b.score - a.score).slice(0, targetCount);
   const inOriginalOrder = topSentences.sort((a, b) => a.index - b.index);
+  const summaryPoints = groupIntoPoints(inOriginalOrder);
 
   return {
-    summary: inOriginalOrder.map((s) => s.sentence).join(' '),
+    summary: summaryPoints.join('\n\n'),
+    summaryPoints,
     selectedSentenceIndices: inOriginalOrder.map((s) => s.index),
     totalSentences: sentences.length,
   };
