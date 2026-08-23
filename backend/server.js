@@ -15,7 +15,7 @@ app.use(
 );
 app.use(express.json());
 
-// Basic abuse protection — document processing (OCR especially) is CPU heavy.
+// Basic abuse protection — document processing (OCR especially) is  CPU heavy.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 60,
