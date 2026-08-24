@@ -123,7 +123,7 @@ npm run dev
 
 Open `http://localhost:5173` and drop in a document.
 
-### 3. (Optional) Enable AI Enhanced Mode
+### 3. Enable AI Enhanced Mode
 
 Add your Anthropic API key to `backend/.env`:
 
@@ -167,27 +167,6 @@ Example response from `/api/documents/summarize`:
   }
 }
 ```
-
----
-
-## Deployment
-
-**Backend → Render / Railway / Fly.io**
-
-1. Push this repo to GitHub.
-2. Create a new Web Service, root directory `backend`.
-3. Build command: `npm install` · Start command: `npm start`.
-4. Set the environment variables from `backend/.env.example`.
-
-**Frontend → Vercel / Netlify**
-
-1. New project, root directory `frontend`.
-2. Build command: `npm run build` · Output directory: `dist`.
-3. Set `VITE_API_BASE_URL` to your deployed backend URL (e.g.
-   `https://your-api.onrender.com/api`).
-
-Update `CORS_ORIGIN` in the backend's environment variables to match your
-deployed frontend URL once both are live.
 
 ---
 
