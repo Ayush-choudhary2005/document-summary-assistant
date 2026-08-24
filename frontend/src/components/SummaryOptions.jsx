@@ -62,13 +62,6 @@ export default function SummaryOptions({
           />
           AI Enhanced Mode
         </label>
-        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
-          Install the application from github and then add Anthropic key
-        </p>
-        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
-          to use AI Enhanced Mode.
-        </p>
-        
       </div>
     </div>
   );

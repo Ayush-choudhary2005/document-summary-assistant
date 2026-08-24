@@ -59,9 +59,10 @@ async function summarizeWithAI(text, length = 'medium') {
   const summaryPoints = rawText
     .split('\n')
     .map((line) => line.replace(/^[\s•*-]+/, '').trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((text) => ({ text, isBullet: true }));
 
-  const summary = summaryPoints.join('\n\n');
+  const summary = summaryPoints.map((p) => p.text).join('\n\n');
 
   return { summary, summaryPoints, mode: 'ai-enhanced', model: config.anthropic.model };
 }

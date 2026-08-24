@@ -16,13 +16,13 @@ function baseName(fileName) {
 }
 
 export function exportAsTxt(fileName, points) {
-  const content = points.map((point) => `• ${point}`).join('\n\n');
+  const content = points.map((p) => (p.isBullet ? `• ${p.text}` : p.text)).join('\n\n');
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
   triggerDownload(blob, `${baseName(fileName)}-summary.txt`);
 }
 
 export function exportAsMarkdown(fileName, points, keywords = []) {
-  const body = points.map((point) => `- ${point}`).join('\n');
+  const body = points.map((p) => (p.isBullet ? `- ${p.text}` : p.text)).join('\n\n');
   const keywordLine = keywords.length ? `\n\n**Keywords:** ${keywords.join(', ')}\n` : '';
   const content = `# Summary — ${fileName}\n\n${body}${keywordLine}`;
   const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
@@ -32,7 +32,7 @@ export function exportAsMarkdown(fileName, points, keywords = []) {
 export function exportAsPdf(fileName, points) {
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
   const margin = 56;
-  const maxWidth = doc.internal.pageSize.getWidth() - margin * 2 - 14; // leave room for bullet indent
+  const bulletIndent = 14;
   const pageHeight = doc.internal.pageSize.getHeight();
   const lineHeight = 16;
 
@@ -46,7 +46,9 @@ export function exportAsPdf(fileName, points) {
   let cursorY = margin + 32;
 
   points.forEach((point) => {
-    const lines = doc.splitTextToSize(point, maxWidth);
+    const textX = point.isBullet ? margin + bulletIndent : margin;
+    const maxWidth = doc.internal.pageSize.getWidth() - margin * 2 - (point.isBullet ? bulletIndent : 0);
+    const lines = doc.splitTextToSize(point.text, maxWidth);
     const blockHeight = lines.length * lineHeight;
 
     if (cursorY + blockHeight > pageHeight - margin) {
@@ -54,8 +56,10 @@ export function exportAsPdf(fileName, points) {
       cursorY = margin;
     }
 
-    doc.text('•', margin, cursorY);
-    doc.text(lines, margin + 14, cursorY, { lineHeightFactor: 1.4 });
+    if (point.isBullet) {
+      doc.text('•', margin, cursorY);
+    }
+    doc.text(lines, textX, cursorY, { lineHeightFactor: 1.4 });
     cursorY += blockHeight + 10;
   });
 
@@ -63,6 +67,8 @@ export function exportAsPdf(fileName, points) {
 }
 
 export async function copyToClipboard(points) {
-  const text = Array.isArray(points) ? points.map((p) => `• ${p}`).join('\n\n') : points;
+  const text = Array.isArray(points)
+    ? points.map((p) => (p.isBullet ? `• ${p.text}` : p.text)).join('\n\n')
+    : points;
   await navigator.clipboard.writeText(text);
 }

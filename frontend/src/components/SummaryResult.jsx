@@ -3,6 +3,7 @@ import AnnotatedDocument from './AnnotatedDocument.jsx';
 import KeywordCloud from './KeywordCloud.jsx';
 import StatsPanel from './StatsPanel.jsx';
 import { exportAsTxt, exportAsMarkdown, exportAsPdf, copyToClipboard } from '../utils/export.util.js';
+import { normalizePoints, segmentPoints } from '../utils/points.util.js';
 
 export default function SummaryResult({ result }) {
   const [copied, setCopied] = useState(false);
@@ -10,8 +11,8 @@ export default function SummaryResult({ result }) {
 
   if (!result) return null;
 
-  const points =
-    result.summaryPoints && result.summaryPoints.length > 0 ? result.summaryPoints : [result.summary];
+  const points = normalizePoints(result.summaryPoints, result.summary);
+  const segments = segmentPoints(points);
 
   const handleCopy = async () => {
     await copyToClipboard(points);
@@ -38,14 +39,33 @@ export default function SummaryResult({ result }) {
         )}
       </div>
 
-      <ul className="mt-5 space-y-3">
-        {points.map((point, i) => (
-          <li key={i} className="flex gap-3 font-display text-lg leading-relaxed text-ink dark:text-paper">
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-moss dark:bg-marker" aria-hidden="true" />
-            <span>{point}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-5 space-y-4">
+        {segments.map((segment, i) =>
+          segment.type === 'paragraph' ? (
+            <p
+              key={i}
+              className="font-display text-lg leading-relaxed text-ink dark:text-paper"
+            >
+              {segment.text}
+            </p>
+          ) : (
+            <ul key={i} className="space-y-3">
+              {segment.items.map((item, j) => (
+                <li
+                  key={j}
+                  className="flex gap-3 font-display text-lg leading-relaxed text-ink dark:text-paper"
+                >
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-moss dark:bg-marker"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        )}
+      </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
         <button
