@@ -62,6 +62,13 @@ export default function SummaryOptions({
           />
           AI Enhanced Mode
         </label>
+        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
+          Install the application from github and set the
+        </p>
+        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
+          ANTHROPIC_API_KEY environment variable to enable AI-enhanced summaries.
+        </p>
+
       </div>
     </div>
   );
