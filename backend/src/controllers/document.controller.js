@@ -19,7 +19,6 @@ async function safeUnlink(filePath) {
   try {
     await fs.unlink(filePath);
   } catch {
-    // Non-fatal — temp OS storage gets cleaned up eventually regardless.
   }
 }
 

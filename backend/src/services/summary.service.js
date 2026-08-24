@@ -1,6 +1,5 @@
 const { tokenizeWords } = require('../utils/keywords.util');
 
-// Fraction of segments to keep for each requested length.
 const LENGTH_RATIOS = {
   short: 0.15,
   medium: 0.3,
@@ -14,14 +13,9 @@ const ABBREVIATIONS = new Set([
   'inc', 'ltd', 'co', 'fig', 'no', 'st', 'approx',
 ]);
 
-// Matches a bullet/list marker at the very start of an already-split line —
-// safe to treat as a list item regardless of what punctuation follows it.
 const BULLET_LINE_REGEX = /^[•●▪‣◦○*]\s+|^[-–—]\s+/;
 
-// Common section-header words in resumes/reports. Matched against exact
-// ALL-CAPS and Title-Case forms only (never plain lowercase) so we never
-// mistake an ordinary sentence containing "summary" or "overview" for a
-// heading — these headers are structural furniture, not content.
+
 const HEADER_KEYWORDS = [
   'EDUCATION', 'EXPERIENCE', 'EXPERIENCES', 'WORK EXPERIENCE', 'PROJECTS',
   'PROJECT', 'SKILLS', 'TECHNICAL SKILLS', 'SOFT SKILLS', 'CERTIFICATIONS',

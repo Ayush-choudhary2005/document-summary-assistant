@@ -1,12 +1,7 @@
 const fs = require('fs/promises');
 const pdfParse = require('pdf-parse');
 
-/**
- * Extracts text from a PDF file while preserving paragraph structure as
- * closely as pdf-parse's layout data allows: consecutive lines are joined
- * into paragraphs, and blank lines / page breaks are kept as paragraph
- * separators instead of being collapsed into one wall of text.
- */
+
 async function extractTextFromPdf(filePath) {
   const buffer = await fs.readFile(filePath);
   const data = await pdfParse(buffer);

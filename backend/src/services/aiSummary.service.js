@@ -30,7 +30,6 @@ async function summarizeWithAI(text, length = 'medium') {
 
   const lengthInstruction = LENGTH_INSTRUCTIONS[length] || LENGTH_INSTRUCTIONS.medium;
 
-  // Guard against sending an enormous document straight through.
   const trimmedText = text.length > 60000 ? `${text.slice(0, 60000)}\n[...truncated]` : text;
 
   const response = await client.messages.create({

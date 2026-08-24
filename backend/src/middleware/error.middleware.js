@@ -1,13 +1,9 @@
 const multer = require('multer');
 
-// Catches errors thrown inside async route handlers so we don't need
-// try/catch boilerplate in every controller.
 function asyncHandler(fn) {
   return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 }
 
-// Express error-handling middleware (must have 4 args to be recognized).
-// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   console.error(`[error] ${req.method} ${req.originalUrl} ->`, err.message);
 

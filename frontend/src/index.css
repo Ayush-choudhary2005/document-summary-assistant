@@ -15,7 +15,6 @@ body {
   color: #1b231f;
 }
 
-/* Visible keyboard focus everywhere, per accessibility floor */
 :focus-visible {
   outline: 2px solid #4b6858;
   outline-offset: 2px;
@@ -32,7 +31,6 @@ body {
   }
 }
 
-/* Highlighter-mark animation used on extracted key sentences */
 @keyframes markerSweep {
   from {
     background-size: 0% 40%;
@@ -54,7 +52,6 @@ body {
   background-image: linear-gradient(rgba(255, 201, 60, 0.55), rgba(255, 201, 60, 0.55));
 }
 
-/* Torn edge for the paper panel, reinforcing the "document" motif */
 .torn-edge::before {
   content: '';
   position: absolute;

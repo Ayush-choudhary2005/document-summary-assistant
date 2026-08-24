@@ -18,12 +18,7 @@ function tokenizeWords(text) {
   );
 }
 
-/**
- * Extracts the most frequent, meaningful words/phrases from the document to
- * power the keyword tag cloud. Uses simple term-frequency scoring with a
- * light bonus for capitalized terms in the original text (likely proper
- * nouns / named entities).
- */
+
 function extractKeywords(originalText, limit = 10) {
   const words = tokenizeWords(originalText);
   const freq = new Map();
@@ -32,8 +27,6 @@ function extractKeywords(originalText, limit = 10) {
     freq.set(word, (freq.get(word) || 0) + 1);
   }
 
-  // Bonus for words that frequently appear capitalized in the source
-  // (a cheap proxy for proper nouns / key entities).
   const capitalizedCounts = new Map();
   const capMatches = originalText.match(/\b[A-Z][a-zA-Z'-]{2,}\b/g) || [];
   for (const w of capMatches) {

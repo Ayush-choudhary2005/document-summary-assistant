@@ -1,10 +1,6 @@
 const Tesseract = require('tesseract.js');
 
-/**
- * Runs OCR over an image file (scanned document, photo of a page, etc.)
- * and returns the recognized text plus a confidence score so the UI can
- * warn the user when a scan was low quality.
- */
+
 async function extractTextFromImage(filePath, onProgress) {
   const { data } = await Tesseract.recognize(filePath, 'eng', {
     logger: (m) => {

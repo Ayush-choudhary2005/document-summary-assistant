@@ -40,7 +40,7 @@ const upload = multer({
   fileFilter,
   limits: {
     fileSize: config.maxFileSizeMb * 1024 * 1024,
-    files: 10, // supports the batch-upload extra feature
+    files: 10, 
   },
 });
 

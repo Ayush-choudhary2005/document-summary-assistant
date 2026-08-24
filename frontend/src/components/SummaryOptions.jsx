@@ -62,6 +62,12 @@ export default function SummaryOptions({
           />
           AI Enhanced Mode
         </label>
+        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
+          Download the app to run AI Enhanced Mode locally.
+        </p>
+        <p className="font-mono text-xs uppercase tracking-wide text-ink/50 dark:text-paper/50">
+          and set ANTHROPIC_API_KEY in backend/.env.
+        </p>
       </div>
     </div>
   );

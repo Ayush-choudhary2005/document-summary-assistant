@@ -15,7 +15,6 @@ app.use(
 );
 app.use(express.json());
 
-// Basic abuse protection — document processing (OCR especially) is CPU heavy.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 60,
@@ -25,9 +24,6 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Friendly root route — this API is meant to be called from the frontend,
-// not visited directly, but a bare 404 on "/" confuses people checking
-// whether the deploy worked. Point them to the real health check instead.
 app.get('/', (req, res) => {
   res.json({
     success: true,
