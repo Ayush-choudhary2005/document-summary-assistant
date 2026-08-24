@@ -95,7 +95,7 @@ supply a Claude API key.
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/<your-username>/document-summary-assistant.git
+git clone https://github.com/Ayush-choudhary2005/document-summary-assistant.git
 cd document-summary-assistant
 
 # Backend
