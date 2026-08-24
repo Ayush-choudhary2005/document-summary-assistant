@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink dark:bg-paper-dark dark:text-paper font-body transition-colors duration-300;
+}
+
+::selection {
+  background-color: #ffc93c;
+  color: #1b231f;
+}
+
+/* Visible keyboard focus everywhere, per accessibility floor */
+:focus-visible {
+  outline: 2px solid #4b6858;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Highlighter-mark animation used on extracted key sentences */
+@keyframes markerSweep {
+  from {
+    background-size: 0% 40%;
+  }
+  to {
+    background-size: 100% 40%;
+  }
+}
+
+.marker-highlight {
+  background-image: linear-gradient(#ffc93c, #ffc93c);
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 40%;
+  animation: markerSweep 0.6s ease-out;
+}
+
+.dark .marker-highlight {
+  background-image: linear-gradient(rgba(255, 201, 60, 0.55), rgba(255, 201, 60, 0.55));
+}
+
+/* Torn edge for the paper panel, reinforcing the "document" motif */
+.torn-edge::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image: linear-gradient(135deg, transparent 50%, inherit 50%),
+    linear-gradient(-135deg, transparent 50%, inherit 50%);
+  background-size: 16px 16px;
+  background-repeat: repeat-x;
+}
