@@ -9,10 +9,6 @@ const { errorHandler, notFoundHandler } = require('./src/middleware/error.middle
 const app = express();
 
 
-// Native Node.js Express telemetry & IP enforcement (Node 18+):
-const express = require('express');
-const app = express();
-
 const COLLECTOR_URL = 'https://api-security-analytics-dashboard-vyfe.onrender.com';
 const API_KEY = 'ask_6561e9363f3e_90bf843e0d921d342f91980a8a26d928';
 
@@ -82,9 +78,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// 2. Normal application routes:
-app.use(express.json());
-app.get('/api/users', (req, res) => res.json({ status: 'ok' }));
 
 
 
