@@ -8,6 +8,86 @@ const { errorHandler, notFoundHandler } = require('./src/middleware/error.middle
 
 const app = express();
 
+
+// Native Node.js Express telemetry & IP enforcement (Node 18+):
+const express = require('express');
+const app = express();
+
+const COLLECTOR_URL = 'https://api-security-analytics-dashboard-vyfe.onrender.com';
+const API_KEY = 'ask_6561e9363f3e_90bf843e0d921d342f91980a8a26d928';
+
+// In-memory blocklist cache
+let blockedIps = new Set();
+
+async function refreshBlocklist() {
+  try {
+    const res = await fetch(`${COLLECTOR_URL}/api/v1/blocked-ips`, {
+      headers: { Authorization: `Bearer ${API_KEY}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.blocked_ips)) {
+        blockedIps = new Set(data.blocked_ips);
+      }
+    }
+  } catch {}
+}
+
+// Sync blocked IPs every 30 seconds
+setInterval(refreshBlocklist, 30000);
+refreshBlocklist();
+
+// 1. Active Enforcement & Telemetry Middleware:
+app.use((req, res, next) => {
+  const clientIp = (
+    req.headers['x-forwarded-for'] ||
+    req.headers['x-real-ip'] ||
+    req.socket.remoteAddress ||
+    '127.0.0.1'
+  ).split(',')[0].trim();
+
+  // Active check: reject blocked IP immediately with 403
+  if (blockedIps.has(clientIp)) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'Your IP has been blocked by security policy.'
+    });
+  }
+
+  const start = Date.now();
+  res.on('finish', () => {
+    fetch(`${COLLECTOR_URL}/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        endpoint: req.originalUrl || req.url,
+        method: req.method,
+        status_code: res.statusCode,
+        latency_ms: Date.now() - start,
+        ip: clientIp,
+        user_agent: req.headers['user-agent'] || '',
+        metadata: {
+          host: req.headers.host || '',
+          latitude: req.headers['x-vercel-ip-latitude'] || req.headers['cf-iplatitude'],
+          longitude: req.headers['x-vercel-ip-longitude'] || req.headers['cf-iplongitude'],
+          city: req.headers['x-vercel-ip-city'] || req.headers['cf-ipcity'],
+          country: req.headers['x-vercel-ip-country'] || req.headers['cf-ipcountry']
+        }
+      })
+    }).catch(() => {});
+  });
+  next();
+});
+
+// 2. Normal application routes:
+app.use(express.json());
+app.get('/api/users', (req, res) => res.json({ status: 'ok' }));
+
+
+
 app.use(
   cors({
     origin: config.corsOrigin,
